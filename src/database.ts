@@ -15,28 +15,12 @@ const {
 
 const config = {
   host: POSTGRES_HOST,
-  database: POSTGRES_DB,
+  database: ENV === 'dev' ? POSTGRES_DB : POSTGRES_TEST_DB,
   user: POSTGRES_USER,
   password: POSTGRES_PASSWORD,
   port: parseInt(POSTGRES_PORT),
 };
 
-const configTest = {
-  host: POSTGRES_HOST,
-  database: POSTGRES_TEST_DB,
-  user: POSTGRES_USER,
-  password: POSTGRES_PASSWORD,
-  port: parseInt(POSTGRES_PORT),
-};
-
-let client;
-
-if (ENV === 'test') {
-  client = new Pool(configTest);
-}
-
-if (ENV === 'dev') {
-  client = new Pool(config);
-}
+const client = new Pool(config);
 
 export default client;

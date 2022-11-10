@@ -8,7 +8,7 @@ export async function verifyAdmin(
   req: apiReq,
   res: Response,
   next: NextFunction
-) {
+): Promise<void> {
   try {
     const user = await store.show(req.user.id);
     req.allowed = user.is_admin;

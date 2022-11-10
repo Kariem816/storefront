@@ -12,7 +12,7 @@ export async function verifyAuthToken(
   req: apiReq,
   res: Response,
   next: NextFunction
-) {
+): Promise<void> {
   try {
     const authorizationHeader = req.headers.authorization;
     if (authorizationHeader) {
@@ -43,26 +43,3 @@ export async function verifyAuthToken(
     res.status(400).json({ err: error.msg });
   }
 }
-
-// import { Response } from "express"
-// import jwt from 'jsonwebtoken'
-// import dotenv from 'dotenv'
-// import { jwtReq } from '../data/types'
-
-// dotenv.config()
-
-// export function verifyAuthToken(req: jwtReq, res: Response, next: Function) {
-//     try {
-//         const authorizationHeader = req.headers.authorization
-//         const token = authorizationHeader.split(' ')[1]
-//         jwt.verify(token, process.env.TOKEN_SECRET, (err, result) => {
-//             if (err) {
-//                 return res.status(401).json({ error: err.message })
-//             }
-//             req.user = result.user.id
-//             return next()
-//         })
-//     } catch (error) {
-//         res.status(401)
-//     }
-// }

@@ -15,3 +15,15 @@
 - Run migrations
     + `yarn db:up` OR `npm run db:up`
 
+#### Running Tests
+- Run tests
+    + `yarn test` OR `npm run test`
+
+#### Running The Project
+- Start the server
+    + `yarn start` OR `npm run start`
+
+
+## API Documentation
+
+-See `requirements.md` for API documentation

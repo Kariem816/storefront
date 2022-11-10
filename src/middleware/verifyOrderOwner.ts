@@ -8,7 +8,7 @@ export async function verifyOrderOwner(
   req: apiReq,
   res: Response,
   next: NextFunction
-) {
+): Promise<void> {
   try {
     const orders = await store.index(req.user.id);
     const orderId = parseInt(req.params.id);

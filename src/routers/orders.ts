@@ -67,7 +67,9 @@ ordersRouter.post(
         data: result,
       });
     } else {
-      res.json({ msg: 'You do not have access to modify this order' });
+      res
+        .status(401)
+        .json({ msg: 'You do not have access to modify this order' });
     }
   }
 );
@@ -84,11 +86,9 @@ ordersRouter.delete(
       await store.delete(order.id);
       return res.json({ msg: 'Order deleted' });
     }
-    res
-      .status(401)
-      .json({
-        err: 'You do not have access to this data or this order does not exist',
-      });
+    res.status(401).json({
+      err: 'You do not have access to this data or this order does not exist',
+    });
   }
 );
 

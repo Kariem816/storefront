@@ -27,14 +27,19 @@ usersRouter.post('/register', async (req: Request, res: Response) => {
   }
 });
 
-usersRouter.get('/', verifyAuthToken, verifyAdmin, async (req: apiReq, res: Response) => {
-  if (req.allowed) {
-    const result = await userStore.index();
-    res.json(result);
-  } else {
-    res.status(401).json({ err: 'Unauthorized' });
+usersRouter.get(
+  '/',
+  verifyAuthToken,
+  verifyAdmin,
+  async (req: apiReq, res: Response) => {
+    if (req.allowed) {
+      const result = await userStore.index();
+      res.json(result);
+    } else {
+      res.status(401).json({ err: 'Unauthorized' });
+    }
   }
-});
+);
 
 usersRouter.get('/me', verifyAuthToken, async (req: apiReq, res: Response) => {
   const result = await userStore.show(req.user.id);
@@ -53,14 +58,14 @@ usersRouter.put('/me', verifyAuthToken, async (req: apiReq, res: Response) => {
   }
 });
 
-usersRouter.delete('/me', verifyAuthToken, async (req: apiReq, res: Response) => {
-  if (req.user == req.params.id) {
-    const result = await userStore.delete(parseInt(req.params.id));
-    res.json(result);
-  } else {
-    res.status(401).json({ err: 'You do not have access to modify this data' });
+usersRouter.delete(
+  '/me',
+  verifyAuthToken,
+  async (req: apiReq, res: Response) => {
+    await userStore.delete(req.user.id);
+    res.json({ msg: 'User deleted' });
   }
-});
+);
 
 usersRouter.post('/login', async (req: Request, res: Response) => {
   const result = await userStore.authenticate(

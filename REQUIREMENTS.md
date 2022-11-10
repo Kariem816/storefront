@@ -1,31 +1,26 @@
-# API Requirements
-The company stakeholders want to create an online storefront to showcase their great product ideas. Users need to be able to browse an index of all products, see the specifics of a single product, and add products to an order that they can view in a cart page. You have been tasked with building the API that will support this application, and your coworker is building the frontend.
-
-These are the notes from a meeting with the frontend developer that describe what endpoints the API needs to supply, as well as data shapes the frontend and backend have agreed meet the requirements of the application. 
-
 ## API Endpoints
 #### Products
-- Index: 'products/' [GET]
-- Show: 'products/:productid' [GET]
-- Create [token required]: 'products/add' [post]
-- Top 5 most popular products 
-- Products by category (args: product category): 'products/category/:category' [GET]
+- Index: 'products/' [GET] (returns all products)
+- Show: 'products/:productid' [GET] (returns a single product)
+- Create [token required]: 'products/add' [post] (creates a new product)
+- Top 5 most popular products [GET]: 'products/popular' (returns the top 5 most popular products)
+- Products by category (args: product category): 'products/category/:category' [GET] (returns all products in a given category)
 
 #### Users
-- Index [token required] [admin role required]: 'users/' [GET]
-- Show [token required]: 'users/me' [GET]
-- Create N[token required]: 'users/register' [POST]
-- Login: 'users/login' [POST]
-- Update [token required]: 'users/me' [PUT]
-- Delete [token required]: 'users/me' [DELETE]
+- Index [token required] [admin role required]: 'users/' [GET] (returns all users info)
+- Show [token required]: 'users/me' [GET] (returns the current user info)
+- Create N[token required]: 'users/register' [POST] (creates a new user and returns a token)
+- Login: 'users/login' [POST] (logs in a user and returns a token)
+- Update [token required]: 'users/me' [PUT] (updates the current user info)
+- Delete [token required]: 'users/me' [DELETE] (deletes the current user)
 
 #### Orders
-- Current Order by user (args: user id)[token required]: 'orders/' [GET]
-- Completed Orders by user (args: user id)[token required]: 'orders/complete' [GET]
+- Current Order by user (args: user id)[token required]: 'orders/' [GET] (returns all orders for a given user)
+- Completed Orders by user (args: user id)[token required]: 'orders/complete' [GET] (returns all completed orders for a given user)
 
 #### Dashboard
-- Most Expensive Products: '/most_expensive_products' [GET]
-- Cheapest Products: '/cheapest_products' [GET]
+- Most Expensive Products: '/most_expensive_products' [GET] (returns the 5 most expensive products)
+- Cheapest Products: '/cheapest_products' [GET] (returns the 5 cheapest products)
 
 
 ## Data Shapes

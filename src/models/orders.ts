@@ -18,7 +18,8 @@ export class OrderStore {
   async indexCompleted(userId: User['id']): Promise<Order[]> {
     try {
       const conn = await client.connect();
-      const sql = 'SELECT * FROM orders WHERE user_id=($1) AND status=($2)';
+      const sql =
+        'SELECT * FROM orders WHERE user_id=($1) AND is_completed=($2)';
       const result = await conn.query(sql, [userId, true]);
       conn.release();
       return result.rows;
@@ -107,7 +108,7 @@ export class OrderStore {
   async removeProduct(o: Order, p: Product): Promise<Order> {
     try {
       const sql =
-        'DELETE FROM orders_products WHERE order_id=($1) AND product_id=($2) RETURNING *';
+        'DELETE FROM order_products WHERE order_id=($1) AND product_id=($2) RETURNING *';
       const conn = await client.connect();
       const result = await conn.query(sql, [o.id, p.id]);
       const order = result.rows[0];

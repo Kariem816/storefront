@@ -2,7 +2,6 @@ import { Product, User } from '../data/types';
 import client from '../database';
 
 export class DashboardQueries {
-  // Get all products that have been included in orders
   async productsInOrders(): Promise<Product[]> {
     try {
       const conn = await client.connect();
@@ -23,7 +22,7 @@ export class DashboardQueries {
     try {
       const conn = await client.connect();
       const sql =
-        'SELECT username, first_name, last_name, orders.id, status FROM users INNER JOIN orders ON users.id = orders.user_id';
+        'SELECT username, first_name, last_name, orders.id FROM users INNER JOIN orders ON users.id = orders.user_id WHERE is_completed = false';
 
       const result = await conn.query(sql);
 
