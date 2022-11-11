@@ -19,7 +19,7 @@ describe('Products Router - Endpoints Tests', () => {
     const response = await request.post('/users/register').send({
       firstname: 'John',
       lastname: 'Doe',
-      username: 'johndoe',
+      username: 'johndoee',
       password: 'password',
     });
     expect(response.body).toBeInstanceOf(String);
@@ -53,7 +53,8 @@ describe('Products Router - Endpoints Tests', () => {
 
   it('should get all products', async () => {
     const response = await request.get('/products');
-    expect(response.body.length).toBe(2);
+    expect(response.body).toBeInstanceOf(Array);
+    expect(response.body.length).toBe(4);
   });
 
   it('should get a product by id', async () => {

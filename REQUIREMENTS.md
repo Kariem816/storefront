@@ -46,6 +46,12 @@
 - user_id: number
 - is_completed (order status): boolean
 
+#### Order_Products
+- id: number
+- order_id: number
+- product_id: number
+- quantity: number
+
 
 ## Database Schema
 #### Products

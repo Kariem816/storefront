@@ -14,7 +14,7 @@ describe('Users Router - Endpoints Tests', () => {
     const response = await request.post('/users/register').send({
       firstname: 'John',
       lastname: 'Doe',
-      username: 'johndoe',
+      username: 'johndoee',
       password: 'password',
     });
     expect(response.body).toBeInstanceOf(String);
@@ -23,7 +23,7 @@ describe('Users Router - Endpoints Tests', () => {
 
   it('should sign in a user', async () => {
     const response = await request.post('/users/login').send({
-      username: 'johndoe',
+      username: 'johndoee',
       password: 'password',
     });
     expect(response.body).toBeInstanceOf(String);
@@ -34,7 +34,7 @@ describe('Users Router - Endpoints Tests', () => {
     const response = await request
       .get('/users/me')
       .set('authorization', `Bearer ${token}`);
-    expect(response.body.username).toBe('johndoe');
+    expect(response.body.username).toBe('johndoee');
   });
 
   it('should delete a user', async () => {

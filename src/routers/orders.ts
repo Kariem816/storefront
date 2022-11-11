@@ -53,23 +53,27 @@ ordersRouter.post(
   verifyAuthToken,
   verifyOrderOwner,
   async (req: apiReq, res: Response) => {
-    if (req.allowed) {
-      const order = {
-        id: parseInt(req.params.id),
-      };
-      const product = {
-        id: parseInt(req.body.product_id),
-        quantity: req.body.quantity,
-      };
-      const result = await store.addProduct(order, product);
-      res.json({
-        msg: 'Product added to order',
-        data: result,
-      });
-    } else {
-      res
-        .status(401)
-        .json({ msg: 'You do not have access to modify this order' });
+    try {
+      if (req.allowed) {
+        const order = {
+          id: parseInt(req.params.id),
+        };
+        const product = {
+          id: parseInt(req.body.product_id),
+          quantity: req.body.quantity,
+        };
+        const result = await store.addProduct(order, product);
+        res.json({
+          msg: 'Product added to order',
+          data: result,
+        });
+      } else {
+        res
+          .status(401)
+          .json({ msg: 'You do not have access to modify this order' });
+      }
+    } catch (err) {
+      res.status(400).json({ err: err });
     }
   }
 );
@@ -79,16 +83,20 @@ ordersRouter.delete(
   verifyAuthToken,
   verifyOrderOwner,
   async (req: apiReq, res: Response) => {
-    if (req.allowed) {
-      const order = {
-        id: parseInt(req.params.id),
-      };
-      await store.delete(order.id);
-      return res.json({ msg: 'Order deleted' });
+    try {
+      if (req.allowed) {
+        const order = {
+          id: parseInt(req.params.id),
+        };
+        await store.delete(order.id);
+        return res.json({ msg: 'Order deleted' });
+      }
+      res.status(401).json({
+        err: 'You do not have access to this data or this order does not exist',
+      });
+    } catch (err) {
+      res.status(400).json({ err: err });
     }
-    res.status(401).json({
-      err: 'You do not have access to this data or this order does not exist',
-    });
   }
 );
 
@@ -97,20 +105,24 @@ ordersRouter.delete(
   verifyAuthToken,
   verifyOrderOwner,
   async (req: apiReq, res: Response) => {
-    const order = {
-      id: parseInt(req.params.id),
-    };
-    const product = {
-      id: parseInt(req.body.product_id),
-    };
-    if (req.allowed) {
-      const result = await store.removeProduct(order, product);
-      return res.json({
-        msg: 'Product removed from order',
-        data: result,
-      });
+    try {
+      const order = {
+        id: parseInt(req.params.id),
+      };
+      const product = {
+        id: parseInt(req.body.product_id),
+      };
+      if (req.allowed) {
+        const result = await store.removeProduct(order, product);
+        return res.json({
+          msg: 'Product removed from order',
+          data: result,
+        });
+      }
+      res.status(401).json({ err: 'You do not have access to this data' });
+    } catch (err) {
+      res.status(400).json({ err: err });
     }
-    res.status(401).json({ err: 'You do not have access to this data' });
   }
 );
 

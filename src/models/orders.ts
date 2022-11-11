@@ -1,4 +1,4 @@
-import { apiRes, Order, User } from '../data/types';
+import { apiRes, Order, OrderProduct, User } from '../data/types';
 import client from '../database';
 import { Product } from '../data/types';
 
@@ -54,7 +54,7 @@ export class OrderStore {
     }
   }
 
-  async addProduct(o: Order, p: Product): Promise<Order | apiRes> {
+  async addProduct(o: Order, p: Product): Promise<OrderProduct | apiRes> {
     const product = await this.show(o.id);
 
     if (product.is_completed) {
@@ -105,7 +105,7 @@ export class OrderStore {
     }
   }
 
-  async removeProduct(o: Order, p: Product): Promise<Order> {
+  async removeProduct(o: Order, p: Product): Promise<OrderProduct> {
     try {
       const sql =
         'DELETE FROM order_products WHERE order_id=($1) AND product_id=($2) RETURNING *';
@@ -118,6 +118,20 @@ export class OrderStore {
       throw new Error(
         `Could not remove product from order ${o.id}. Error: ${err}`
       );
+    }
+  }
+
+  async complete(o: Order): Promise<Order> {
+    try {
+      const sql =
+        'UPDATE orders SET is_completed=($1) WHERE id=($2) RETURNING *';
+      const conn = await client.connect();
+      const result = await conn.query(sql, [true, o.id]);
+      const order = result.rows[0];
+      conn.release();
+      return order;
+    } catch (err) {
+      throw new Error(`Could not complete order ${o.id}. Error: ${err}`);
     }
   }
 

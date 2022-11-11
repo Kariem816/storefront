@@ -14,7 +14,7 @@ export class ProductStore {
     }
   }
 
-  async userIndex(userId: string): Promise<Product[]> {
+  async userIndex(userId: Product['user_id']): Promise<Product[]> {
     try {
       const conn = await client.connect();
       const sql = 'SELECT * FROM products WHERE user_id=($1)';
@@ -26,7 +26,7 @@ export class ProductStore {
     }
   }
 
-  async show(id: string): Promise<Product> {
+  async show(id: Product['id']): Promise<Product> {
     try {
       const sql = 'SELECT * FROM products WHERE id=($1)';
       const conn = await client.connect();
@@ -38,7 +38,7 @@ export class ProductStore {
     }
   }
 
-  async showCategory(category: string): Promise<Product[]> {
+  async showCategory(category: Product['category']): Promise<Product[]> {
     try {
       const sql = 'SELECT * FROM products WHERE lower(category) LIKE $1';
       const conn = await client.connect();
@@ -71,9 +71,9 @@ export class ProductStore {
     }
   }
 
-  async delete(id: string): Promise<Product> {
+  async delete(id: Product['id']): Promise<Product> {
     try {
-      const sql = 'DELETE FROM products WHERE id=($1)';
+      const sql = 'DELETE FROM products WHERE id=($1) RETURNING *';
       const conn = await client.connect();
       const result = await conn.query(sql, [id]);
       const order = result.rows[0];

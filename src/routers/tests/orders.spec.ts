@@ -4,7 +4,7 @@ import app from '../../server';
 const request = supertest(app);
 
 describe('Orders Router - Endpoints Tests', () => {
-  let token: string, orderId: number, productId: number;
+  let token: string, orderId: number;
 
   function setToken(tokenText: string) {
     token = tokenText;
@@ -14,32 +14,15 @@ describe('Orders Router - Endpoints Tests', () => {
     orderId = id;
   }
 
-  function setProductId(id: number) {
-    productId = id;
-  }
-
   it('should create a user to utilize', async () => {
     const response = await request.post('/users/register').send({
       firstname: 'John',
       lastname: 'Doe',
-      username: 'johndoe',
+      username: 'johndoee',
       password: 'password',
     });
     expect(response.body).toBeInstanceOf(String);
     setToken(response.body);
-  });
-
-  it('should create a product to utilize', async () => {
-    const response = await request
-      .post('/products/add')
-      .set('authorization', `Bearer ${token}`)
-      .send({
-        name: 'Product',
-        price: 10,
-        category: 'Category',
-      });
-    expect(response.body.name).toBe('Product');
-    setProductId(response.body.id);
   });
 
   it('should make a new order', async () => {
@@ -76,7 +59,7 @@ describe('Orders Router - Endpoints Tests', () => {
     const response = await request
       .post(`/orders/${orderId}/products`)
       .send({
-        product_id: productId,
+        product_id: 1,
         quantity: 1,
       })
       .set('authorization', `Bearer ${token}`);
@@ -87,7 +70,7 @@ describe('Orders Router - Endpoints Tests', () => {
     const response = await request
       .delete(`/orders/${orderId}/products`)
       .send({
-        product_id: productId,
+        product_id: 1,
       })
       .set('authorization', `Bearer ${token}`);
     expect(response.body.msg).toBe('Product removed from order');
@@ -98,13 +81,6 @@ describe('Orders Router - Endpoints Tests', () => {
       .delete(`/orders/${orderId}`)
       .set('authorization', `Bearer ${token}`);
     expect(response.body.msg).toBe('Order deleted');
-  });
-
-  it('should delete the product after finishing', async () => {
-    const response = await request
-      .delete(`/products/delete/${productId}`)
-      .set('authorization', `Bearer ${token}`);
-    expect(response.body.msg).toBe('Product deleted');
   });
 
   it('should delete the user after finishing', async () => {

@@ -23,7 +23,7 @@ usersRouter.post('/register', async (req: Request, res: Response) => {
     const token = jwt.sign({ ...newUser }, process.env.TOKEN_SECRET);
     res.json(token);
   } catch (err) {
-    res.status(400).json(err + user);
+    res.status(400).json({ err: err });
   }
 });
 
@@ -32,29 +32,43 @@ usersRouter.get(
   verifyAuthToken,
   verifyAdmin,
   async (req: apiReq, res: Response) => {
-    if (req.allowed) {
-      const result = await userStore.index();
-      res.json(result);
-    } else {
-      res.status(401).json({ err: 'Unauthorized' });
+    try {
+      if (req.allowed) {
+        const result = await userStore.index();
+        res.json(result);
+      } else {
+        res.status(401).json({ err: 'Unauthorized' });
+      }
+    } catch (err) {
+      res.status(400).json({ err: err });
     }
   }
 );
 
 usersRouter.get('/me', verifyAuthToken, async (req: apiReq, res: Response) => {
-  const result = await userStore.show(req.user.id);
-  res.json(result);
+  try {
+    const result = await userStore.show(req.user.id);
+    res.json(result);
+  } catch (err) {
+    res.status(400).json({ err: err });
+  }
 });
 
 usersRouter.put('/me', verifyAuthToken, async (req: apiReq, res: Response) => {
-  if (req.user == req.params.id) {
-    const result = await userStore.update(req.user.id, {
-      first_name: req.body.firstname,
-      password: req.body.password,
-    });
-    res.json(result);
-  } else {
-    res.status(401).json({ err: 'You do not have access to modify this data' });
+  try {
+    if (req.user == req.params.id) {
+      const result = await userStore.update(req.user.id, {
+        first_name: req.body.firstname,
+        password: req.body.password,
+      });
+      res.json(result);
+    } else {
+      res
+        .status(401)
+        .json({ err: 'You do not have access to modify this data' });
+    }
+  } catch (err) {
+    res.status(400).json({ err: err });
   }
 });
 
@@ -62,22 +76,31 @@ usersRouter.delete(
   '/me',
   verifyAuthToken,
   async (req: apiReq, res: Response) => {
-    await userStore.delete(req.user.id);
-    res.json({ msg: 'User deleted' });
+    try {
+      await userStore.delete(req.user.id);
+      res.json({ msg: 'User deleted' });
+    } catch (err) {
+      res.status(400).json({ err: err });
+    }
   }
 );
 
 usersRouter.post('/login', async (req: Request, res: Response) => {
-  const result = await userStore.authenticate(
-    req.body.username,
-    req.body.password
-  );
-  if (result) {
-    const token = jwt.sign({ ...result }, process.env.TOKEN_SECRET);
-    res.json(token);
-    return;
+  try {
+    const result = await userStore.authenticate(
+      req.body.username,
+      req.body.password
+    );
+    if (result) {
+      const token = jwt.sign({ ...result }, process.env.TOKEN_SECRET);
+      res.json(token);
+      return;
+    } else {
+      res.status(401).json({ err: 'Invalid username or password' });
+    }
+  } catch (err) {
+    res.status(400).json({ err: err });
   }
-  res.status(400).json('bad request');
 });
 
 export default usersRouter;

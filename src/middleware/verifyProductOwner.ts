@@ -10,7 +10,7 @@ export async function verifyProductOwner(
   next: NextFunction
 ): Promise<void> {
   try {
-    const products = await store.userIndex(req.user.id.toString());
+    const products = await store.userIndex(req.user.id);
     req.allowed = products.some(
       (product) => product.id === parseInt(req.params.id)
     );

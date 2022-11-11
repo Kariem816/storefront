@@ -34,3 +34,9 @@ export type Product = {
   user_id?: number;
   quantity?: number;
 };
+
+export type OrderProduct = {
+  order_id?: number;
+  product_id?: number;
+  quantity?: number;
+};

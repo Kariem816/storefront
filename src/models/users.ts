@@ -94,7 +94,7 @@ export class UserStore {
   async delete(id: User['id']): Promise<User> {
     const conn = await client.connect();
     try {
-      const sql = 'DELETE FROM users WHERE id=($1) RETURNING *';
+      const sql = 'DELETE FROM users WHERE id=($1) RETURNING id, username';
       const result = await client.query(sql, [id]);
       const user = result.rows[0];
 
@@ -111,19 +111,23 @@ export class UserStore {
     username: User['username'],
     password: User['password']
   ): Promise<User | null> {
-    await client.connect();
+    try {
+      await client.connect();
 
-    const sql = 'SELECT * FROM users WHERE username=($1)';
-    const result = await client.query(sql, [username]);
+      const sql = 'SELECT * FROM users WHERE username=($1)';
+      const result = await client.query(sql, [username]);
 
-    if (result.rows.length) {
-      const user = result.rows[0];
+      if (result.rows.length) {
+        const user = result.rows[0];
 
-      if (bcrypt.compareSync(password + HASH_SECRET, user.password)) {
-        return user;
+        if (bcrypt.compareSync(password + HASH_SECRET, user.password)) {
+          return user;
+        }
       }
-    }
 
-    return null;
+      return null;
+    } catch (err) {
+      throw new Error(`Could not authenticate user ${username}. Error: ${err}`);
+    }
   }
 }
