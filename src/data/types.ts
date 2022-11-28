@@ -24,6 +24,7 @@ export type Order = {
   id?: number;
   is_completed?: boolean;
   user_id?: number;
+  products?: Product[];
 };
 
 export type Product = {

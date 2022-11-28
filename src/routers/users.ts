@@ -87,6 +87,8 @@ usersRouter.delete(
 
 usersRouter.post('/login', async (req: Request, res: Response) => {
   try {
+    console.log(req.body)
+    console.log("\n")
     const result = await userStore.authenticate(
       req.body.username,
       req.body.password

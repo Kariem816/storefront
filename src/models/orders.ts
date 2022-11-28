@@ -30,11 +30,16 @@ export class OrderStore {
 
   async show(id: Order['id']): Promise<Order> {
     try {
-      const sql = 'SELECT * FROM orders WHERE id=($1)';
       const conn = await client.connect();
-      const result = await conn.query(sql, [id]);
+      let sql = 'SELECT * FROM orders WHERE id=($1)';
+      let result = await conn.query(sql, [id]);
       conn.release();
       const order = result.rows[0];
+
+      sql = 'SELECT product_id, quantity FROM order_products WHERE order_id=($1)';
+      result = await conn.query(sql, [id])
+      order.products = result.rows
+
       return order;
     } catch (err) {
       throw new Error(`Could not find order ${id}. Error: ${err}`);

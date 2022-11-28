@@ -31,6 +31,14 @@ app.get('/*', (_req: Request, res: Response) => {
   res.status(404).json({ err: 'Not Found' });
 });
 
+app.post('/*', (_req: Request, res: Response) => {
+  res.status(404).json({ err: 'Not Found' });
+});
+
+app.delete('/*', (_req: Request, res: Response) => {
+  res.status(404).json({ err: 'Not Found' });
+});
+
 app.listen(3000, () => {
   console.log(`starting app on: http://${address}`);
 });
